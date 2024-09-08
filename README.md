@@ -1,4 +1,4 @@
-# NestJS + GraphQL + TypeORM + Postgreessql
+# NestJS + GraphQL + TypeORM + Postgressql
 
 
 
