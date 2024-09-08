@@ -1,0 +1,445 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Role {
+  id: Int!
+  role_name: String!
+}
+
+type Availability {
+  id: Int!
+  userId: Int!
+  key: String!
+  value: JSONObject!
+  service_id: Int!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+type Services {
+  id: Int!
+  name: String!
+  duration: Int!
+  fee: Float!
+  image: String!
+  type: String!
+  status: String!
+  short_description: String!
+  owner_id: Int!
+  is_deleted: Int!
+}
+
+type Schedule_Order {
+  id: Int!
+  schedule_id: Int!
+  user_id: Int!
+  transaction_id: String
+  amount: Float
+  payment_date: DateTime!
+  created_at: DateTime!
+  updated_at: DateTime!
+  status: String
+  refund_id: String
+  refund_amount: Float
+  user: User!
+  schedule: Schedule!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Schedule {
+  id: Int!
+  user_id: Int!
+  date: DateTime!
+  start_time: String!
+  end_time: String!
+  type: String!
+  status: String!
+  appreciate_id: Int!
+  service_id: Int!
+  parent_id: Int!
+  meeting_url: String
+  event_id: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  service: Services!
+  user: User!
+}
+
+type User {
+  id: Int!
+  first_name: String!
+  last_name: String!
+  email: String!
+  phone: String!
+  password: String!
+  role_id: Int!
+  auth_code: Int
+  is_verified: Int!
+  status: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  is_deleted: Int!
+  role: Role!
+}
+
+type Email_Template {
+  id: Int!
+  subject: String!
+  email_action: String!
+  content: String
+
+  """Indicates whether the email template type is admin side or user side."""
+  side: String!
+
+  """Indicates whether the email template type is online or offline."""
+  type: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type User_Payment {
+  id: Int!
+  user_id: Int!
+  customer_id: String!
+  payment_profile_id: String!
+}
+
+type Option {
+  id: Int!
+  option_key: String!
+  option_value: JSONObject!
+}
+
+type User_Payment_Option {
+  id: Int!
+  user_payment_id: String!
+  option_name: String!
+  option_value: JSONObject!
+}
+
+type commonResponse {
+  success: Boolean
+  message: String
+  status: Float
+  data: String
+}
+
+type SuccessResponse {
+  message: String
+  status: Float
+  token: String
+}
+
+type AuthorizationTokenResponse {
+  message: String
+  status: Float
+  token: String
+  token_type: String
+}
+
+type UserLoginResponse {
+  message: String
+  status: Float
+  token: String
+  token_type: String
+}
+
+type GetAvailabilityResponce {
+  message: String!
+  status: Int!
+  values: String!
+}
+
+type Query {
+  generateAuthorizationToken: AuthorizationTokenResponse!
+  getRoleById(id: Int!): Role
+  getRoles: [Role!]!
+  deleteUser(id: Int!): User!
+  deleteBulkUser(ids: [Int!]!): commonResponse!
+  getUserById(id: Int!): User
+  getUsers: [User!]!
+  getCustomerCards(customer_id: String!, user_id: Float!): commonResponse!
+  getUserPayment(user_id: Float!): User_Payment!
+  getOptions: [Option!]!
+  getOptionsByOprionkeys(options_keys: [String!]!): [Option!]!
+  getAvailabilityById(userId: Int!): GetAvailabilityResponce!
+  getOrders: [Schedule_Order!]!
+  getOrdersByUserId(user_id: Int!): [Schedule_Order!]!
+  getOrderDetailsById(order_id: Int!): [Schedule_Order!]!
+  deleteOrder(ids: [Int!]!): commonResponse!
+  getSchedulesByUserId(userId: Int!): [Schedule!]!
+  getSchedulesByServiceId(service_id: Int!, status: String, page: Int = 1, limit: Int = 10): String!
+  getAllSchedulesOfServices(service_id: Int, status: String, page: Int = 1, limit: Int = 10): String!
+  getScheduleDetailsById(id: Int!): [Schedule!]!
+  getSchedulesByDate(date: DateTime!): [Schedule!]!
+  getAllSchedules: [Schedule!]!
+  getServices(page: Int! = 1, limit: Int! = 10, search: String, sortBy: String, sortOrder: String = "ASC", filterBy: String, filterValue: String): String!
+  getServiceDetailsById(id: Int!): String!
+  deleteService(ids: [Int!]!): commonResponse!
+  updateServiceStatus(id: Int!, status: String!): commonResponse!
+  getEmailTemplates: [Email_Template!]!
+  getEmailTemplateByid(id: Int!): Email_Template!
+  getEmailTemplateByEmailAction(email_action: String!): Email_Template!
+  getDashboardData: String!
+  getDashboardDataByUserId(id: Int!): String!
+}
+
+type Mutation {
+  login(userLoginData: UserLoginInput!): UserLoginResponse!
+  forgotPassword(userEmail: String!): String!
+  verifyOtp(verifyOtpData: VerifyOtpInput!): SuccessResponse!
+  resetpasssword(resetPasswordInput: ResetPasswordInput!): String!
+  changepasssword(changePasswordInput: ChangePasswordInput!): commonResponse!
+  createRole(createRoleData: CreateRoleInput!): Role!
+  updateRole(updateRoleData: CreateRoleInput!): Role!
+  createUser(createUserData: CreateUserInput!): User!
+  updateUser(updateUserData: UpdateUserInput!): User!
+  uploadProfilePic(userId: Int!, image: Upload!): String!
+  createCustomeronStripe(createCustomerData: createCustomerDataInput!): String!
+  saveCustomerCard(customerCardInfo: createCustomerCardInfo!): commonResponse!
+  createPaymentIntent(paymentInfo: createpaymentIntent!): String!
+  refundPayment(schedule_id: Int!, amount: Float!): commonResponse!
+  createUserPayment(createPaymentData: CreateUserPaymentInput!): User_Payment!
+  createUserPaymentOptions(createPaymentOptionData: CreateUserPaymentOptionInput!): User_Payment_Option!
+  createOption(createOptionData: CreateOptionInput!): Option!
+  updateOption(updateOptionData: CreateOptionInput!): Option!
+  updateSiteTitleFaviconLogo(siteTitleFaviconLogo: UpdateLogoFavIconOptionInput!): String!
+  saveAuthCredentials(authCredentials: authCredentials!): String!
+  saveAuthCode(authCode: authCode!): commonResponse!
+  createAvalibility(createAvailabilityData: CreateAvailabilityInput!): Availability!
+  updateAvailability(updateAvalibilityData: CreateAvailabilityInput!): Availability!
+  createOrder(createOrderData: CreateOrderInput!): Schedule_Order!
+  updateOrder(updateOrderData: UpdateOrderInput!): Schedule_Order!
+  createSchedule(createScheduleData: CreateScheduleInput!): Schedule!
+  updateScheduleById(updateScheduleData: UpdateScheduleInput!): Schedule!
+  deleteScheduleById(schedule_id: Int!): commonResponse!
+  createService(createServiceData: CreateServiceInput!): commonResponse!
+  updateService(updateServiceData: UpdateServiceInput!): commonResponse!
+  updateEmailTemplate(updateEmailTemplateData: updateEmailTemplateInput!): Email_Template!
+}
+
+input UserLoginInput {
+  email: String!
+  password: String!
+}
+
+input VerifyOtpInput {
+  email: String!
+  otp: Float!
+}
+
+input ResetPasswordInput {
+  token: String!
+  password: String!
+}
+
+input ChangePasswordInput {
+  email: String!
+  old_password: String!
+  password: String!
+}
+
+input CreateRoleInput {
+  id: Float
+  role_name: String!
+}
+
+input CreateUserInput {
+  id: Float
+  first_name: String!
+  last_name: String!
+  email: String!
+  phone: String!
+  password: String!
+  role_id: Int!
+  status: Int! = 0
+  is_verified: Int! = 0
+}
+
+input UpdateUserInput {
+  id: Float!
+  first_name: String!
+  last_name: String!
+  email: String!
+  phone: String!
+  password: String
+  status: Int
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input createCustomerDataInput {
+  user_id: Float!
+  name: String!
+  email: String!
+  phone: String!
+}
+
+input createCustomerCardInfo {
+  user_id: Float!
+  customer_id: String!
+  key: String!
+  value: JSONObject!
+}
+
+input createpaymentIntent {
+  customer_id: String!
+  cardId: String!
+  amount: Float!
+}
+
+input CreateUserPaymentInput {
+  id: Float!
+  user_id: Float!
+  customer_id: String!
+  payment_profile_id: String!
+}
+
+input CreateUserPaymentOptionInput {
+  user_payment_id: String!
+  option_name: String!
+  option_value: JSONObject!
+}
+
+input CreateOptionInput {
+  option_key: String!
+  option_value: JSONObject!
+}
+
+input UpdateLogoFavIconOptionInput {
+  option_key: String!
+  option_value: logofaviconOptionVal!
+}
+
+input logofaviconOptionVal {
+  org_title: String!
+  company_name: String!
+  company_email: String!
+  company_phone: String!
+  company_address: String!
+  org_logo: Upload!
+  org_favicon: Upload!
+}
+
+input authCredentials {
+  client_id: String!
+  client_secret: String!
+  redirect_uris: String!
+  calender_id: String!
+  api_key: String!
+  cancel_uris: String!
+}
+
+input authCode {
+  code: String!
+}
+
+input CreateAvailabilityInput {
+  key: String!
+  value: JSONObject!
+  service_id: Int
+}
+
+input CreateOrderInput {
+  schedule_id: Int!
+  user_id: Int!
+  amount: Float!
+  payment_date: DateTime!
+  transaction_id: String!
+  status: String
+}
+
+input UpdateOrderInput {
+  order_id: Int!
+  transaction_id: String!
+  status: String!
+}
+
+input CreateScheduleInput {
+  user_id: Int!
+  date: DateTime!
+  start_time: String!
+  end_time: String!
+
+  """
+  Indicates whether the schedule type is free or paid. Please use the terms "free" or "paid" respectively.
+  """
+  type: String!
+  appreciate_id: Int
+  service_id: Int!
+  meeting_url: String
+  event_id: String
+}
+
+input UpdateScheduleInput {
+  user_id: Int!
+  date: DateTime!
+  start_time: String!
+  end_time: String!
+
+  """
+  Indicates whether the schedule type is free or paid. Please use the terms "free" or "paid" respectively.
+  """
+  type: String!
+  appreciate_id: Int
+  service_id: Int!
+  meeting_url: String
+  event_id: String
+  schedule_id: Int!
+
+  """
+  Indicates the current status of the schedule: active, canceled, deleted, or rescheduled. Please use the terms "active", "canceled", "deleted", or "rescheduled" accordingly.
+  """
+  status: String!
+}
+
+input CreateServiceInput {
+  name: String!
+  duration: Int!
+  fee: Float!
+
+  """
+  The image file to upload in filename, mimetype, encoding, createReadStream format.
+  """
+  image: Upload!
+  status: String
+  type: String
+  short_description: String!
+  availability: JSONObject!
+}
+
+input UpdateServiceInput {
+  name: String!
+  duration: Int!
+  fee: Float!
+
+  """
+  The image file to upload in filename, mimetype, encoding, createReadStream format.
+  """
+  image: Upload!
+  status: String
+  type: String
+  short_description: String!
+  availability: JSONObject!
+  id: Int!
+}
+
+input updateEmailTemplateInput {
+  id: Int!
+  subject: String!
+  email_action: String!
+  content: String!
+}
+
+type Subscription {
+  scheduleCreated: Schedule!
+}
